@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Empire of Worth · @empireofworth</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-dim: #c9a84c40;
+      --bg: #050505;
+      --surface: #0a0907;
+      --border: #1e1a16;
+      --text: #e8e0d0;
+      --muted: #9a9080;
+      --faint: #4a4038;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Georgia', serif;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Vignette */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, #000 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Gold ambient glow */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, #c9a84c18 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+    }
+
+    /* ── Header ornament ── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 48px 0 32px;
+    }
+    .ornament-line {
+      height: 1px;
+      flex: 1;
+    }
+    .ornament-line.left  { background: linear-gradient(to right, transparent, #c9a84c80); }
+    .ornament-line.right { background: linear-gradient(to left,  transparent, #c9a84c80); }
+    .ornament-text {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    /* ── Avatar ── */
+    .avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .avatar-ring-outer {
+      position: relative;
+      width: 134px;
+      height: 134px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid #c9a84c40;
+      animation: spin 12s linear infinite;
+    }
+    .ring.slow {
+      inset: -6px;
+      border-color: #c9a84c20;
+      animation: spin 20s linear infinite reverse;
+    }
+    .avatar {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 2px solid #c9a84c60;
+      background: linear-gradient(145deg, #1a1410, #0a0807);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      box-shadow: 0 0 40px #c9a84c30, inset 0 0 30px #00000060;
+    }
+
+    /* ── Name / Bio ── */
+    .name {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .name h1 {
+      font-size: 26px;
+      font-weight: normal;
+      letter-spacing: 3px;
+      color: #f5ede0;
+      text-transform: uppercase;
+    }
+    .name .shape-tag {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      letter-spacing: 5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .bio {
+      text-align: center;
+      color: #8a8070;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      line-height: 1.6;
+      margin: 16px 0 32px;
+      font-style: italic;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-radius: 2px;
+      text-decoration: none;
+      color: var(--text);
+      margin-bottom: 12px;
+      transition: all 0.4s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0a0907, #111009);
+      border: 1px solid #c9a84c35;
+      box-shadow: 0 4px 20px #00000060;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0f0d0b, #1a1410);
+      border-color: #c9a84c90;
+      box-shadow: 0 8px 40px #c9a84c25;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #2a2420;
+      margin-bottom: 40px;
+    }
+    .btn-secondary:hover {
+      border-color: #c9a84c60;
+      transform: translateY(-2px);
+    }
+    .btn-inner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .btn-icon {
+      font-size: 18px;
+      opacity: 0.7;
+    }
+    .btn-label {
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #f0e8d8;
+    }
+    .btn-secondary .btn-label { color: #c0b8a8; }
+    .btn-sub {
+      font-size: 10px;
+      color: #6a6050;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .btn-arrow {
+      color: var(--gold);
+      opacity: 0.5;
+      font-size: 18px;
+    }
+    .btn-secondary .btn-arrow { color: #4a4038; opacity: 1; }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .divider-line { height: 1px; flex: 1; background: var(--border); }
+    .divider-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--faint);
+      text-transform: uppercase;
+    }
+
+    /* ── Notices ── */
+    .notices { display: flex; flex-direction: column; gap: 12px; }
+    .notice {
+      padding: 20px 22px;
+      border: 1px solid var(--border);
+      border-left: 2px solid #2a2218;
+      border-radius: 2px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+    .notice:nth-child(1) { border-left-color: #c9a84c80; animation-delay: 0.3s; }
+    .notice:nth-child(2) { animation-delay: 0.4s; }
+    .notice:nth-child(3) { animation-delay: 0.5s; }
+    .notice:nth-child(4) { animation-delay: 0.6s; }
+
+    .notice-tag {
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 10px;
+    }
+    .notice:nth-child(1) .notice-tag { color: var(--gold); }
+    .notice p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+      font-style: italic;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid #0f0d0b;
+    }
+    .footer span {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: #2e2820;
+      text-transform: uppercase;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; background: #050505; }
+    ::-webkit-scrollbar-thumb { background: #1e1a16; border-radius: 2px; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- Ornament -->
+    <div class="ornament">
+      <div class="ornament-line left"></div>
+      <span class="ornament-text">✦ empire ✦</span>
+      <div class="ornament-line right"></div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-wrap">
+      <div class="avatar-ring-outer">
+        <div class="ring"></div>
+        <div class="ring slow"></div>
+        <div class="avatar">👑</div>
+      </div>
+    </div>
+
+    <!-- Name -->
+    <div class="name">
+      <h1>Empire of Worth</h1>
+      <span class="shape-tag">shape · chris hemsworth</span>
+    </div>
+
+    <p class="bio">Roleplay literário · Ficção · Exclusivo</p>
+
+    <!-- Twitter Link -->
+    <a class="btn btn-primary" href="https://twitter.com/empireofworth" target="_blank" rel="noopener noreferrer">
+      <div class="btn-inner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#c9a84c" opacity="0.9">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.213 5.567zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        <div>
+          <div class="btn-label">@empireofworth</div>
+          <div class="btn-sub">twitter · perfil principal</div>
+        </div>
+      </div>
+      <span class="btn-arrow">→</span>
+    </a>
+
+    <!-- DM -->
+    <a class="btn btn-secondary" href="https://twitter.com/messages/compose?recipient_id=empireofworth" target="_blank" rel="noopener noreferrer">
+      <div class="btn-inner">
+        <span class="btn-icon">✉</span>
+        <div>
+          <div class="btn-label">Mensagem Direta</div>
+          <div class="btn-sub">único canal de contato</div>
+        </div>
+      </div>
+      <span class="btn-arrow">→</span>
+    </a>
+
+    <!-- Divider -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-label">avisos</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Notices -->
+    <div class="notices">
+      <div class="notice">
+        <div class="notice-tag">📌 Fixado · Importante</div>
+        <p>"Não possuo Telegram, Discord ou qualquer outra plataforma. Todo contato acontece exclusivamente via DM no Twitter. Não caia em golpes."</p>
+      </div>
+      <div class="notice">
+        <div class="notice-tag">🎭 RP · Aviso</div>
+        <p>"Este é um perfil de roleplay literário. Os eventos, relacionamentos e situações aqui descritos são ficção. Qualquer semelhança com a realidade é narrativa intencional."</p>
+      </div>
+      <div class="notice">
+        <div class="notice-tag">✍️ Estilo · Escrita</div>
+        <p>"Prefiro qualidade à quantidade. Respondo com calma, mas com profundidade. Se você está aqui por um rp descartável, errou o endereço."</p>
+      </div>
+      <div class="notice">
+        <div class="notice-tag">👤 Shape · Exclusivo</div>
+        <p>"Shape: Chris Hemsworth. Uso exclusivo — sem empréstimos, sem shares. Respeite ou não interaja."</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>✦ empireofworth · ficção literária ✦</span>
+    </div>
+
+  </div>
+</body>
+</html>
